@@ -1,0 +1,33 @@
+in 1
+in 2
+noteq 1 2 3
+jumpif 3 a
+show 1
+jump end
+mark a
+less 1 2 5
+jumpif 5 b
+new 0 5
+sum 5 2
+jump c
+mark b
+new 0 5
+sum 5 1
+mark c
+new 1 6
+new 1 9
+minu 5 9
+mark loop
+noteq 5 6 7
+ifdiv 1 6 3
+ifdiv 2 6 4
+and 3 4 8
+not 8
+jumpif 8 notansw
+new 0 10
+sum 10 6
+mark notansw
+sum 6 9
+jumpif 7 loop
+show 10
+mark end

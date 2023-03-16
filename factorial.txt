@@ -1,0 +1,23 @@
+in 2
+new 0 3
+eq 2 3 9
+new 1 1
+jumpif 9 zero
+less 2 3 4
+new 1 5
+jumpif 4 err
+more 2 5 6
+mark loop
+mult 1 2
+minu 2 5
+more 2 5 6
+jumpif 6 loop
+show 1
+jump end
+mark err
+new Incorect_input 8
+show 8
+jump end
+mark zero
+show 1
+mark end
