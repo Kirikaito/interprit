@@ -1,1 +1,1 @@
-./NOK.txt
+./NOD.txt

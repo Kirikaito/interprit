@@ -1,10 +1,28 @@
 const fs = require('fs-extra');
 
+function getKeyByValue(object, value) {
+  return Object.keys(object).find(key => object[key] === value);
+}
+
+const funcs = {"in" : 1, "new":2, "show":3,"mark":4,"jump":5,
+                "jumpif":6,"sum":7,"minu":8,"mult":9,"div":10,
+                "ifdiv":11,"more":12,"eqmore":13,"eqless":14,"less":15,
+                "eq":16,"noteq":17,"and":18,"or":19,"not":20,"change":21};
+
 try {
   const data = fs.readFileSync('./info.txt', 'utf8');
   try {
     let memory = fs.readFileSync(data, 'utf8').match(/\b(\w+)/g);
     const code_size = memory.length;
+    for(let i = 0;i<code_size;i++){
+      if(memory[i] in funcs){
+        memory[i] = funcs[memory[i]];
+      }else{
+        if(isNaN(memory[i]) != 1){
+          memory[i] = Number(memory[i]);
+        }
+      }
+    }
     memory.length = 1000;
     let mark = {};
     let pos = 0;
@@ -12,10 +30,10 @@ try {
     
     while(pos < code_size){
       switch (memory[pos]){
-        case "in":
+        case 1:
           inp++;
           break;
-        case "mark":
+        case 4:
           pos ++;
           mark[memory[pos]] = pos;
           break;
@@ -25,6 +43,7 @@ try {
       }
       pos++;
     }
+    for(let i = 0;i<code_size;i++){if(isNaN(memory[i])){memory[i] = Number(mark[memory[i]]);}}
     pos = 0;
     
     let i = 0;
@@ -35,9 +54,10 @@ try {
       i++;
     });
     i = 2;
+    
     try {
       while(pos < code_size){
-          switch (memory[pos]){
+          switch (getKeyByValue(funcs,memory[pos])){
 
               case "in":
                 memory[Number(memory[pos + 1]) + code_size] = Number(input[i]);
@@ -52,7 +72,7 @@ try {
 
               case "show":
                 pos++;
-                console.log(memory[Number(memory[pos]) + code_size]);
+                console.log(memory[memory[pos] + code_size]);
                 break;
 
               case "mark":
@@ -61,11 +81,11 @@ try {
 
               case "jump":
                 pos ++;
-                pos = mark[memory[pos]];
+                pos = memory[pos];
                 break;
               
               case "jumpif":
-                if(Number(memory[Number(memory[pos + 1]) + code_size])){pos = mark[memory[pos + 2]];}
+                if(Number(memory[Number(memory[pos + 1]) + code_size])){pos = memory[pos + 2];}
                 else {pos += 2;}
                 break;
 
@@ -78,7 +98,7 @@ try {
                 memory[Number(memory[pos  + 1]) + code_size] = Number(memory[Number(memory[pos + 1]) + code_size]) - Number(memory[Number(memory[pos + 2]) + code_size]);
                 pos += 2;
                 break;
-
+                
               case "mult":
                 memory[Number(memory[pos  + 1]) + code_size] = Number(memory[Number(memory[pos + 1]) + code_size]) * Number(memory[Number(memory[pos + 2]) + code_size]);
                 pos += 2;
@@ -144,7 +164,7 @@ try {
                 }else{memory[Number(memory[pos + 3]) + code_size] = 0;}
                 pos += 3;
                 break;
-              
+                
               case "or":
                 if(Number(memory[Number(memory[pos + 1]) + code_size]) || Number(memory[Number(memory[pos + 2]) + code_size])){
                    memory[Number(memory[pos + 3]) + code_size] = 1;
@@ -157,6 +177,12 @@ try {
                 else{memory[Number(memory[pos + 1]) + code_size] = 1;}
                 pos++;
                 break;
+
+              case "change":
+                pos++
+                memory[memory[pos] + code_size] = memory[memory[pos] + code_size] * (-1);
+                break;
+
               default:
                 console.error(`unknown command in position ${pos}`);
                 break;

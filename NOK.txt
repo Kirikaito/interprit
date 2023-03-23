@@ -1,5 +1,14 @@
 in 1
 in 2
+new 0 11
+more 1 11 12
+more 2 11 13
+jumpif 12 x
+change 1
+mark x
+jumpif 13 y
+change 2
+mark y
 noteq 1 2 3
 jumpif 3 a
 show 1
