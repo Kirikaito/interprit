@@ -39,6 +39,7 @@ function buildTree(nodeQueue){
         let node2 = nodeQueue.shift();
         let node = new HuffmanNode('', node1.frequency + node2.frequency, node1, node2);  
         nodeQueue.push(node);
+        nodeQueue.sort((a,b) => a.frequency - b.frequency );
     }
     return nodeQueue.shift();
 }
